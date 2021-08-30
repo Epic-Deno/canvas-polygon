@@ -1,0 +1,54 @@
+<!--
+ * @Description: Created By Pony
+ * @Author: Pony
+ * @Date: 2018-12-23 20:04:50
+ * @LastEditors: Pony
+ * @LastEditTime: 2021-08-30 22:53:34
+ * @FilePath: /canvas-polygon-master/index.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>polygon</title>
+    <style>
+        #canvas {
+            border: 1px solid gray;
+        }
+
+        .cover_box {
+            width: 800px;
+            height: 600px;
+            background: url(./u22059.png) no-repeat;
+            background-size: 100% 100%;
+        }
+        .form {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form">
+        <label>图形：</label>
+        <select id="reactType">
+            <option value="1">多边形</option>
+            <option value="2">矩形</option>
+            <option value="3">文字</option>
+        </select>
+        <label>颜色：</label>
+        <input type="color" id="typeColor">
+        <label>文字：</label>
+        <input type="text" id="inputText">
+    </div>
+    <div class="cover_box">
+
+        <canvas id="canvas" width=800 height=600></canvas>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
