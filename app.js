@@ -4,6 +4,8 @@ const COLOR = "#1890ff"
 const LINEWIDTH = 2
 const DOTRADIUS = 3
 const textArray = new Array();
+const rectArray = new Array();
+
 let startX = 0;
 let startY = 0;
 // context.fillStyle = "#FF0000"; 　
@@ -66,10 +68,10 @@ function drawerRect(pointCollection) {
      
 }
 // todo
-function drawerFillRect(x, y, width, height) {
+function drawerFillRect(x, y, width, height,color) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     // context.fillStyle = "rgba(0,255,0,0.2)";
-    context.strokeStyle = document.querySelector('#typeColor').value;        
+    context.strokeStyle = color       
     // context.fillRect(20, 260, 60, 60);        //变浅的红色填充矩形
     context.lineWidth = 2;        //设置边框线框，0.2的透明度不易观察
     context.strokeRect(x, y, width, height);    //变浅的红色边框矩形
@@ -116,6 +118,12 @@ canvas.addEventListener("mouseup", e => {
     let type = document.querySelector('#reactType').value
     if (type == 2) {
         drawerFillRect(startX, startY, e.clientX - startX, e.clientY- startY)
+        rectArray.push({
+            position: [startX, startY],
+            width: e.clientX - startX,
+            height: e.clientY- startY,
+            color: document.querySelector('#typeColor').value
+        })
         isDrawing = false
     }
 })
@@ -136,12 +144,19 @@ canvas.addEventListener("dblclick", e => {
          pointCollection.push(points)
          points = []
        } 
+       context.clearRect(0, 0, canvas.width, canvas.height);// 清空一遍
        pointCollection.length > 0 && drawerRect(pointCollection) // 画多边形
        if (textArray.length > 0) { // 绘制文字
            textArray.map(i => {
                const { text, position, fillStyle } = i;
                drawerText(position[0], position[1], fillStyle, text)
            })
+       }
+       if (rectArray.length > 0) {
+            rectArray.map(i => {
+                const { width, height, position, fillStyle } = i;
+                drawerText(position[0], position[1], fillStyle, text)
+            })
        }
        isDrawing = false
     }
