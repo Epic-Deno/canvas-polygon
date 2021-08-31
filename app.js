@@ -6,7 +6,6 @@ const DOTRADIUS = 3
 const textArray = new Array();
 let startX = 0;
 let startY = 0;
-
 // context.fillStyle = "#FF0000"; 　
 // context.fillRect(50,50,150,100); 
 context.fillStyle = COLOR
@@ -52,8 +51,8 @@ function drawPolygon(points) {
     }
 }
 
-function drawerRect(pointCollenction) {
-    pointCollenction.map(i => {
+function drawerRect(pointCollection) {
+    pointCollection.map(i => {
          let firstPoint = i[0]
          context.moveTo(firstPoint.x, firstPoint.y)
          i.map((item, index) => {
@@ -68,6 +67,7 @@ function drawerRect(pointCollenction) {
 }
 // todo
 function drawerFillRect(x, y, width, height) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
     // context.fillStyle = "rgba(0,255,0,0.2)";
     context.strokeStyle = document.querySelector('#typeColor').value;        
     // context.fillRect(20, 260, 60, 60);        //变浅的红色填充矩形
@@ -75,23 +75,24 @@ function drawerFillRect(x, y, width, height) {
     context.strokeRect(x, y, width, height);    //变浅的红色边框矩形
 }
 
-function drawerText(x, y) {
+function drawerText(x, y, colors, text) {
     context.font = "15px Arial bolder"
-    context.fillStyle = document.querySelector('#typeColor').value
-    context.fillText(document.querySelector('#inputText').value ,x ,y)
+    context.fillStyle = colors
+    context.fillText(text ,x ,y)
 }
 
 let points = []
 let isDrawing = false
 let isPointAdd = false
-let pointCollenction = []
+let pointCollection = []
 canvas.addEventListener("mousedown", e => {
     const loc = windowToCanvas(canvas, e.clientX, e.clientY)
     // points.push(loc)
     // drawPolygon(points)
     let type = document.querySelector('#reactType').value
     // type == 3 && ()
-   
+    startX = e.clientX
+    startY = e.clientY - 40
     isDrawing = true
     isPointAdd = true
 })
@@ -99,7 +100,10 @@ canvas.addEventListener("mousedown", e => {
 canvas.addEventListener("mousemove", e => {
     if (isDrawing) {
         const loc = windowToCanvas(canvas, e.clientX, e.clientY)
-        console.log(document.querySelector('#reactType').value)
+        let type = document.querySelector('#reactType').value
+        if (type == 2) {
+            drawerFillRect(startX, startY, e.clientX - startX, e.clientY- startY)
+        }
         // if (!isPointAdd) {
         //     points.pop()
         // }
@@ -108,25 +112,38 @@ canvas.addEventListener("mousemove", e => {
         // drawPolygon(points)
     }
 })
-
+canvas.addEventListener("mouseup", e => {
+    let type = document.querySelector('#reactType').value
+    if (type == 2) {
+        drawerFillRect(startX, startY, e.clientX - startX, e.clientY- startY)
+        isDrawing = false
+    }
+})
 canvas.addEventListener("dblclick", e => {
     if (isDrawing) {
         let type = document.querySelector('#reactType').value
 
         if (type == 3) {
-            drawerText(e.clientX - 23, e.clientY - 36) // type: 3 的时候需要文字
+            drawerText(e.clientX - 23, e.clientY - 36, document.querySelector('#typeColor').value, document.querySelector('#inputText').value) // type: 3 的时候需要文字
             textArray.push({
                 text: document.querySelector('#inputText').value,
                 position: [e.clientX - 23, e.clientY - 36],
                 fillStyle: document.querySelector('#typeColor').value
             })
         }
-        // drawPolygon(points)
-        // pointCollenction.push(points)
-        // points = []
-        // console.table(pointCollenction)
-        // drawerRect(pointCollenction)
-        // isDrawing = false
+       if (type == 1) {
+         drawPolygon(points)
+         pointCollection.push(points)
+         points = []
+       } 
+       pointCollection.length > 0 && drawerRect(pointCollection) // 画多边形
+       if (textArray.length > 0) { // 绘制文字
+           textArray.map(i => {
+               const { text, position, fillStyle } = i;
+               drawerText(position[0], position[1], fillStyle, text)
+           })
+       }
+       isDrawing = false
     }
 })
 
