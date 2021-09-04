@@ -13,7 +13,7 @@ let startY = 0;
 context.fillStyle = COLOR;
 context.strokeStyle = COLOR;
 context.lineWidth = LINEWIDTH;
-
+// TODO 文字框子的输入
 function windowToCanvas(canvas, x, y) {
   var bbox = canvas.getBoundingClientRect();
   return {
